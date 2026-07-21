@@ -1119,12 +1119,12 @@
 .modal {
     display: none;
     position: fixed;
-    z-index: 1000;
+    z-index: 99999;  /* ← Más alto para que aparezca adelante */
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.7);
     animation: fadeIn 0.3s ease;
 }
 
