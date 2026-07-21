@@ -446,48 +446,11 @@
     background: transparent; /* Sin fondo */
 }
 
-.owner-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    background: transparent; /* Sin fondo blanco */
-    border: none; /* Sin borde */
-    padding: 0;
-    box-shadow: none; /* Sin sombra */
-}
-
-.owner-photo-placeholder {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    border: 3px solid #1e90ff; /* Solo el anillo azul */
-    overflow: hidden;
-    flex-shrink: 0;
-    background: transparent;
-}
-
 .owner-photo-placeholder img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
-}
-
-.owner-info h3 {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #000;
-    margin: 10px 0 0 0;
-    text-align: center;
-}
-
-.owner-info .owner-role {
-    color: #1e90ff;
-    font-weight: 600;
-    font-size: 0.95rem;
-    text-align: center;
-    margin: 5px 0 0 0;
 }
 
         /* FAQ */
@@ -1418,40 +1381,6 @@
     .skill-icon {
         font-size: 2rem;
     }
-    /* ========== MODAL ========== */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    animation: fadeIn 0.3s ease;
-}
-
-.modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-content {
-    background: white;
-    padding: 2.5rem;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    max-width: 500px;
-    width: 90%;
-    animation: slideUp 0.3s ease;
-}
-
-.modal-content h3 {
-    margin-top: 0;
-    font-size: 1.5rem;
-    color: #1a2332;
-    margin-bottom: 0.5rem;
 }
 
 .modal-content > p {
@@ -1562,7 +1491,7 @@
 <body>
     <!-- ========== HEADER ========== -->
     <header class="header" id="header">
-        <a href="https://github.com/Master-J-2025/Solicitud-de-Curriculum/blob/2f9b1363e898633cdb3df980adfda1085c2bcc5b/logo.png" class="header-logo">
+        <<a href="#inicio" class="header-logo">" class="header-logo">
             <!-- 🔽 REEMPLAZAR: Coloca aquí la URL de tu logo -->
             <img src="logo.png" alt="JA - Soluciones" class="header-logo-placeholder" style="object-fit: contain; background: transparent;">
             <!-- 🔼 FIN LOGO -->
@@ -1736,45 +1665,6 @@
     </div>
 </section>
 
-<!-- MODAL - Formulario para calificar -->
-<div id="modalCalificacion" class="modal">
-    <div class="modal-content">
-        <h3>¿Cómo fue tu experiencia?</h3>
-        <p>Tu opinión nos ayuda a mejorar y aparecerá en nuestro sitio.</p>
-        
-        <!-- Nombre -->
-        <div class="form-group">
-            <label>Tu nombre:</label>
-            <input type="text" id="clienteNombre" placeholder="Ej: María G." required>
-        </div>
-        
-        <!-- Estrellas -->
-        <div class="form-group">
-            <label>Calificación:</label>
-            <div class="stars-input" id="starsInput">
-                <span class="star" data-value="1">⭐</span>
-                <span class="star" data-value="2">⭐</span>
-                <span class="star" data-value="3">⭐</span>
-                <span class="star" data-value="4">⭐</span>
-                <span class="star" data-value="5">⭐</span>
-            </div>
-            <div id="starsDisplay">0 estrellas</div>
-        </div>
-        
-        <!-- Opinión -->
-        <div class="form-group">
-            <label>Tu opinión:</label>
-            <textarea id="clienteOpinion" placeholder="Cuéntanos tu experiencia..." rows="4" required></textarea>
-        </div>
-        
-        <!-- Botones -->
-        <div class="modal-buttons">
-            <button class="btn btn-primary" onclick="guardarTestimonio()">Enviar Calificación</button>
-            <button class="btn btn-secondary" onclick="cerrarModal()">Omitir</button>
-        </div>
-    </div>
-</div>
-
     <!-- ========== CONTACTO ========== -->
     <section class="section" id="contacto" style="text-align:center;">
         <div class="section-header">
@@ -1879,6 +1769,16 @@
         </div>
     </div>
 </div>
+
+    <!-- Cargar EmailJS -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+<script>
+    // Inicializar EmailJS con tu Public Key
+    (function() {
+        emailjs.init("nI8lgAEbcGQ-BB_eD"); // ← Reemplaza aquí
+    })();
+</script>
 
     <script>
         // ========== VARIABLE GLOBAL ==========
@@ -2724,8 +2624,8 @@ function cargarTestimonios() {
     };
 
     // ⚠️ REEMPLAZA ESTOS VALORES CON LOS DE TU CUENTA EMAILJS
-    const serviceID = 'TU_SERVICE_ID';          // Ej: 'service_abc123'
-    const templateID = 'TU_TEMPLATE_ID';        // Ej: 'template_xyz789'
+    const serviceID = 'service_laxcuci';          // Ej: 'service_abc123'
+    const templateID = 'template_rgldf9g';        // Ej: 'template_xyz789'
 
     // Enviar correo
     emailjs.send(serviceID, templateID, templateParams)
@@ -3037,123 +2937,6 @@ function generarPDFDespuesDeCalificar(code, submission, d) {
         init();
         console.log('🚀 JA - Soluciones que te movilizan | Solicitud de Currículum Profesional lista.');
         console.log('💡 Panel administrativo: Agrega #admin al final de la URL. Contraseña: admin123');
-
-        calificacionActual = 0;
-
-// Cargar testimonios al iniciar
-document.addEventListener('DOMContentLoaded', () => {
-    cargarTestimonios();
-    setupStarsInput();
-});
-
-// ========== ESTRELLAS INTERACTIVAS ==========
-function setupStarsInput() {
-    const stars = document.querySelectorAll('.stars-input .star');
-    
-    stars.forEach(star => {
-        star.addEventListener('click', () => {
-            calificacionActual = star.dataset.value;
-            
-            // Resaltar estrellas
-            stars.forEach(s => s.classList.remove('active'));
-            for (let i = 0; i < calificacionActual; i++) {
-                stars[i].classList.add('active');
-            }
-            
-            // Mostrar número
-            document.getElementById('starsDisplay').textContent = 
-                `${calificacionActual} ${calificacionActual === '1' ? 'estrella' : 'estrellas'}`;
-        });
-    });
-}
-
-// ========== GUARDAR TESTIMONIO ==========
-function guardarTestimonio() {
-    const nombre = document.getElementById('clienteNombre').value.trim();
-    const opinion = document.getElementById('clienteOpinion').value.trim();
-    
-    // Validar
-    if (!nombre) {
-        alert('Por favor ingresa tu nombre');
-        return;
-    }
-    if (calificacionActual === 0) {
-        alert('Por favor selecciona una calificación');
-        return;
-    }
-    if (!opinion) {
-        alert('Por favor escribe tu opinión');
-        return;
-    }
-    
-    // Crear testimonio
-    const nuevoTestimonio = {
-        nombre: nombre,
-        estrellas: parseInt(calificacionActual),
-        opinion: opinion,
-        fecha: new Date().toISOString()
-    };
-    
-    // Guardar en localStorage (o enviar a servidor)
-    let testimonios = JSON.parse(localStorage.getItem('testimonios')) || [];
-    testimonios.push(nuevoTestimonio);
-    localStorage.setItem('testimonios', JSON.stringify(testimonios));
-    
-    // Limpiar formulario
-    document.getElementById('clienteNombre').value = '';
-    document.getElementById('clienteOpinion').value = '';
-    calificacionActual = 0;
-    document.querySelectorAll('.stars-input .star').forEach(s => s.classList.remove('active'));
-    document.getElementById('starsDisplay').textContent = '0 estrellas';
-    
-    // Cerrar modal y recargar testimonios
-    cerrarModal();
-    cargarTestimonios();
-    
-    alert('¡Gracias por tu calificación! ⭐');
-}
-
-// ========== CARGAR TESTIMONIOS DINÁMICOS ==========
-function cargarTestimonios() {
-    const testimonios = JSON.parse(localStorage.getItem('testimonios')) || [];
-    const container = document.getElementById('testimonios-container');
-    
-    // Si no hay testimonios, mostrar mensaje
-    if (testimonios.length === 0) {
-        container.innerHTML = `
-            <div class="card" style="grid-column: 1/-1; text-align: center;">
-                <p style="color: var(--text-secondary);">Sin testimonios aún. ¡Sé el primero en calificar!</p>
-            </div>
-        `;
-        return;
-    }
-    
-    // Renderizar testimonios
-    container.innerHTML = testimonios.map(test => `
-        <div class="card">
-            <div class="stars">${'⭐'.repeat(test.estrellas)}</div>
-            <p class="testimonio-opinion">"${test.opinion}"</p>
-            <div class="testimonio-nombre">${test.nombre}</div>
-        </div>
-    `).join('');
-}
-
-// ========== CONTROLAR MODAL ==========
-function abrirModal() {
-    document.getElementById('modalCalificacion').classList.add('active');
-}
-
-function cerrarModal() {
-    document.getElementById('modalCalificacion').classList.remove('active');
-}
-
-// Cerrar modal al hacer click afuera
-window.addEventListener('click', (e) => {
-    const modal = document.getElementById('modalCalificacion');
-    if (e.target === modal) {
-        cerrarModal();
-    }
-});
     </script>
 </body>
 </html>
