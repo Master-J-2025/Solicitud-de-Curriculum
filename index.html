@@ -2688,25 +2688,50 @@ function cargarTestimonios() {
         });
 
         // ============ SUBMIT ============
-        function submitForm() {
-            // Validate all critical steps
-            if (!formData.nombre.trim() || !formData.email.trim() || !formData.puestoDeseado.trim() || !formData
-                .perfilProfesional.trim()) {
-                showToast('⚠️ Completa todos los campos obligatorios antes de enviar.');
-                return;
-            }
-            const code = 'JA-CV-' + String(Date.now()).slice(-6).padStart(6, '0').toUpperCase();
-            const submission = {
-                code: code,
-                data: JSON.parse(JSON.stringify(formData)),
-                fecha: new Date().toISOString(),
-                estado: 'pendiente'
-            };
-            // Save to localStorage as admin record
-            const submissions = JSON.parse(localStorage.getItem('ja-submissions') || '[]');
-            submissions.push(submission);
-            localStorage.setItem('ja-submissions', JSON.stringify(submissions));
-            // Show success
+       function submitForm() {
+    // Validar campos obligatorios
+    if (!formData.nombre.trim() || !formData.email.trim() || !formData.puestoDeseado.trim() || !formData.perfilProfesional.trim()) {
+        showToast('⚠️ Completa todos los campos obligatorios antes de enviar.');
+        return;
+    }
+
+    const code = 'JA-CV-' + String(Date.now()).slice(-6).padStart(6, '0').toUpperCase();
+    const submission = {
+        code: code,
+        data: JSON.parse(JSON.stringify(formData)),
+        fecha: new Date().toISOString(),
+        estado: 'pendiente'
+    };
+
+    // Guardar localmente para el panel admin
+    const submissions = JSON.parse(localStorage.getItem('ja-submissions') || '[]');
+    submissions.push(submission);
+    localStorage.setItem('ja-submissions', JSON.stringify(submissions));
+
+    // Parámetros que se enviarán al correo
+    const templateParams = {
+        nombre: formData.nombre,
+        email: formData.email,
+        telefono: formData.telefono || 'No especificado',
+        codigo: code,
+        puesto: formData.puestoDeseado,
+        perfil: formData.perfilProfesional.substring(0, 200) + '...',
+        ciudad: formData.ciudad,
+        provincia: formData.provincia,
+        fecha: new Date().toLocaleString(),
+        // Agrega aquí más campos si tu plantilla los usa
+        // Ejemplo: habilidades: formData.habilidades.join(', ')
+    };
+
+    // ⚠️ REEMPLAZA ESTOS VALORES CON LOS DE TU CUENTA EMAILJS
+    const serviceID = 'TU_SERVICE_ID';          // Ej: 'service_abc123'
+    const templateID = 'TU_TEMPLATE_ID';        // Ej: 'template_xyz789'
+
+    // Enviar correo
+    emailjs.send(serviceID, templateID, templateParams)
+        .then(function(response) {
+            console.log('Correo enviado', response.status);
+            // Mostrar éxito en el paso 15
             const step15 = document.getElementById('step-15');
             if (step15) {
                 step15.innerHTML = `
@@ -2715,23 +2740,21 @@ function cargarTestimonios() {
                         <h3>¡Solicitud enviada con éxito!</h3>
                         <p>Tu código de seguimiento es:</p>
                         <p class="code">${code}</p>
-                        <p style="margin-top:1rem;color:var(--text-secondary);">Guarda este código para consultar el estado de tu solicitud.</p>
+                        <p style="margin-top:1rem;color:var(--text-secondary);">Guarda este código para consultar el estado.</p>
                         <p style="color:var(--text-secondary);">Te hemos enviado un correo de confirmación a <strong>${escHtml(formData.email)}</strong>.</p>
-                        <button class="btn btn-primary" style="margin-top:1.5rem;" onclick="closeForm();window.location.hash='';">Cerrar</button>
-                        <p style="font-size:0.9rem;color:var(--text-secondary);margin-top:1rem;">
-    💡 Al descargar tu CV, podrás dejar una reseña de nuestro servicio
-</p>
-                        <button class="btn btn-outline" style="margin-top:0.5rem;" onclick="generatePDF('${code}')">
-    📄 Descargar CV (Te pediremos una reseña)
-</button>
+                        <button class="btn btn-primary" style="margin-top:1.5rem;" onclick="closeForm();">Cerrar</button>
+                        <button class="btn btn-outline" style="margin-top:0.5rem;" onclick="generatePDF('${code}')">📄 Descargar resumen PDF</button>
                     </div>`;
             }
             updateProgress();
             saveFormData();
-            showToast('✅ Solicitud ' + code + ' enviada correctamente.');
-            // Simulate email (in real app, send via backend)
-            console.log('📧 Simulando envío de correo a:', formData.email, 'con código:', code);
-        }
+            showToast('✅ Solicitud ' + code + ' enviada a tu correo.');
+        })
+        .catch(function(error) {
+            console.error('Error al enviar correo:', error);
+            showToast('❌ No se pudo enviar el correo. Intenta de nuevo.');
+        });
+}
 
 function generatePDF(code) {
     const submission = JSON.parse(localStorage.getItem('ja-submissions') || '[]').find(s => s.code === code);
