@@ -1114,6 +1114,147 @@
                 transform: translateX(-50%) translateY(20px);
             }
         }
+
+        /* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    max-width: 500px;
+    width: 90%;
+    animation: slideUp 0.3s ease;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    color: var(--text);
+}
+
+/* Formulario */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(30, 144, 255, 0.1);
+}
+
+/* Estrellas interactivas */
+.stars-input {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.stars-input .star {
+    font-size: 2rem;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.stars-input .star:hover,
+.stars-input .star.active {
+    opacity: 1;
+}
+
+#starsDisplay {
+    font-size: 0.9rem;
+    color: #f59e0b;
+    font-weight: 600;
+}
+
+/* Botones Modal */
+.modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+    background: var(--bg-light);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Tarjeta de testimonio */
+.card {
+    text-align: center;
+}
+
+.stars {
+    font-size: 1.2rem;
+    color: #f59e0b;
+    margin-bottom: 0.8rem;
+}
+
+.testimonio-opinion {
+    font-style: italic;
+    margin: 0.8rem 0;
+    color: var(--text-secondary);
+}
+
+.testimonio-nombre {
+    color: var(--text);
+    font-weight: 700;
+}
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="logo.png">
@@ -1263,25 +1404,55 @@
         </div>
     </section>
 
-    <!-- ========== TESTIMONIOS ========== -->
-    <section class="section" id="testimonios">
-        <div class="section-header">
-            <div class="section-label">⭐ Testimonios</div>
-            <h2 class="section-title">Lo que dicen nuestros clientes</h2>
+<!-- ========== TESTIMONIOS ========== -->
+<section class="section" id="testimonios">
+    <div class="section-header">
+        <div class="section-label">⭐ Testimonios</div>
+        <h2 class="section-title">Lo que dicen nuestros clientes</h2>
+    </div>
+    <div class="cards-grid" style="max-width:700px;margin:0 auto;" id="testimonios-container">
+        <!-- Los testimonios se cargan aquí dinámicamente -->
+    </div>
+</section>
+
+<!-- MODAL - Formulario para calificar -->
+<div id="modalCalificacion" class="modal">
+    <div class="modal-content">
+        <h3>¿Cómo fue tu experiencia?</h3>
+        <p>Tu opinión nos ayuda a mejorar y aparecerá en nuestro sitio.</p>
+        
+        <!-- Nombre -->
+        <div class="form-group">
+            <label>Tu nombre:</label>
+            <input type="text" id="clienteNombre" placeholder="Ej: María G." required>
         </div>
-        <div class="cards-grid" style="max-width:700px;margin:0 auto;">
-            <div class="card" style="text-align:center;">
-                <div style="font-size:1.2rem;color:#f59e0b;">⭐⭐⭐⭐⭐</div>
-                <p style="font-style:italic;margin:0.8rem 0;">"Excelente servicio, conseguí trabajo gracias al currículum. Muy profesional y rápido."</p>
-                <strong style="color:var(--text);">María G.</strong>
+        
+        <!-- Estrellas -->
+        <div class="form-group">
+            <label>Calificación:</label>
+            <div class="stars-input" id="starsInput">
+                <span class="star" data-value="1">⭐</span>
+                <span class="star" data-value="2">⭐</span>
+                <span class="star" data-value="3">⭐</span>
+                <span class="star" data-value="4">⭐</span>
+                <span class="star" data-value="5">⭐</span>
             </div>
-            <div class="card" style="text-align:center;">
-                <div style="font-size:1.2rem;color:#f59e0b;">⭐⭐⭐⭐⭐</div>
-                <p style="font-style:italic;margin:0.8rem 0;">"El diseño superó mis expectativas. Janiel es muy atento y el CV pasó los filtros ATS sin problema."</p>
-                <strong style="color:var(--text);">Carlos R.</strong>
-            </div>
+            <div id="starsDisplay">0 estrellas</div>
         </div>
-    </section>
+        
+        <!-- Opinión -->
+        <div class="form-group">
+            <label>Tu opinión:</label>
+            <textarea id="clienteOpinion" placeholder="Cuéntanos tu experiencia..." rows="4" required></textarea>
+        </div>
+        
+        <!-- Botones -->
+        <div class="modal-buttons">
+            <button class="btn btn-primary" onclick="guardarTestimonio()">Enviar Calificación</button>
+            <button class="btn btn-secondary" onclick="cerrarModal()">Omitir</button>
+        </div>
+    </div>
+</div>
 
     <!-- ========== CONTACTO ========== -->
     <section class="section" id="contacto" style="text-align:center;">
@@ -2065,7 +2236,12 @@
                         <p style="margin-top:1rem;color:var(--text-secondary);">Guarda este código para consultar el estado de tu solicitud.</p>
                         <p style="color:var(--text-secondary);">Te hemos enviado un correo de confirmación a <strong>${escHtml(formData.email)}</strong>.</p>
                         <button class="btn btn-primary" style="margin-top:1.5rem;" onclick="closeForm();window.location.hash='';">Cerrar</button>
-                        <button class="btn btn-outline" style="margin-top:0.5rem;" onclick="generatePDF('${code}')">📄 Descargar resumen PDF</button>
+                        <p style="font-size:0.9rem;color:var(--text-secondary);margin-top:1rem;">
+    💡 Al descargar tu CV, podrás dejar una reseña de nuestro servicio
+</p>
+                        <button class="btn btn-outline" style="margin-top:0.5rem;" onclick="generatePDF('${code}')">
+    📄 Descargar CV (Te pediremos una reseña)
+</button>
                     </div>`;
             }
             updateProgress();
@@ -2075,30 +2251,117 @@
             console.log('📧 Simulando envío de correo a:', formData.email, 'con código:', code);
         }
 
-        function generatePDF(code) {
-            const submission = JSON.parse(localStorage.getItem('ja-submissions') || '[]').find(s => s.code === code);
-            if (!submission) { showToast('No se encontró la solicitud.'); return; }
-            const d = submission.data;
-            let html =
-                `<html><head><meta charset="UTF-8"><title>Resumen CV - ${code}</title><style>body{font-family:sans-serif;padding:2rem;max-width:800px;margin:auto;}h1{color:#2563EB;}h2{border-bottom:2px solid #2563EB;padding-bottom:4px;}p{margin:4px 0;}</style></head><body>`;
-            html += `<h1>Resumen de Solicitud - ${code}</h1>`;
-            html += `<p><strong>Fecha:</strong> ${new Date(submission.fecha).toLocaleString()}</p>`;
-            html += `<h2>Información Personal</h2><p>Nombre: ${d.nombre}</p><p>Teléfono: ${d.telefono}</p><p>Email: ${d.email}</p><p>Ciudad: ${d.ciudad}, ${d.provincia}</p>`;
-            html += `<h2>Puesto Deseado</h2><p>${d.puestoDeseado} ${d.empresaOpcional?'en '+d.empresaOpcional:''}</p>`;
-            html +=
-                `<h2>Perfil Profesional</h2><p>${d.perfilProfesional}</p>`;
-            html += `<h2>Experiencia Laboral</h2>${d.experiencias.map(e=>'<p><strong>'+e.cargo+'</strong> en '+e.empresa+' ('+e.fechaInicio+' - '+(e.actualmente?'Actualidad':e.fechaFin)+')</p>').join('')}`;
-            html +=
-                `<h2>Educación</h2>${d.educacion.map(e=>'<p>'+e.carrera+' - '+e.centro+' ('+e.nivel+', '+e.estado+')</p>').join('')}`;
-            html +=
-                `<h2>Habilidades</h2><p>${d.habilidades.join(', ')} ${d.habilidadesCustom}</p>`;
-            html += `<h2>Preferencias</h2><p>Diseño: ${d.preferencias.diseno} | ATS: ${d.preferencias.compatibleATS}</p>`;
-            html += `</body></html>`;
-            const win = window.open('', '_blank', 'width=800,height=600');
-            win.document.write(html);
-            win.document.close();
-            setTimeout(() => win.print(), 500);
-        }
+function generatePDF(code) {
+    const submission = JSON.parse(localStorage.getItem('ja-submissions') || '[]').find(s => s.code === code);
+    if (!submission) { showToast('No se encontró la solicitud.'); return; }
+    
+    const d = submission.data;
+    
+    // ========== MOSTRAR MODAL DE CALIFICACIÓN ==========
+    // Guardar la data para usarla después
+    window.datosParaPDF = { code, submission, d };
+    
+    // Abrir modal
+    abrirModalCalificacion();
+    
+    // El PDF se genera después de que el usuario califica
+}
+
+// ========== NUEVA FUNCIÓN: Generar PDF después de calificar ==========
+function generarPDFDespuesDeCalificar(code, submission, d) {
+    let html =
+        `<html><head><meta charset="UTF-8"><title>Resumen CV - ${code}</title><style>body{font-family:sans-serif;padding:2rem;max-width:800px;margin:auto;}h1{color:#2563EB;}h2{border-bottom:2px solid #2563EB;padding-bottom:4px;}p{margin:4px 0;}</style></head><body>`;
+    html += `<h1>Resumen de Solicitud - ${code}</h1>`;
+    html += `<p><strong>Fecha:</strong> ${new Date(submission.fecha).toLocaleString()}</p>`;
+    html += `<h2>Información Personal</h2><p>Nombre: ${d.nombre}</p><p>Teléfono: ${d.telefono}</p><p>Email: ${d.email}</p><p>Ciudad: ${d.ciudad}, ${d.provincia}</p>`;
+    html += `<h2>Puesto Deseado</h2><p>${d.puestoDeseado} ${d.empresaOpcional?'en '+d.empresaOpcional:''}</p>`;
+    html += `<h2>Perfil Profesional</h2><p>${d.perfilProfesional}</p>`;
+    html += `<h2>Experiencia Laboral</h2>${d.experiencias.map(e=>'<p><strong>'+e.cargo+'</strong> en '+e.empresa+' ('+e.fechaInicio+' - '+(e.actualmente?'Actualidad':e.fechaFin)+')</p>').join('')}`;
+    html += `<h2>Educación</h2>${d.educacion.map(e=>'<p>'+e.carrera+' - '+e.centro+' ('+e.nivel+', '+e.estado+')</p>').join('')}`;
+    html += `<h2>Habilidades</h2><p>${d.habilidades.join(', ')} ${d.habilidadesCustom}</p>`;
+    html += `<h2>Preferencias</h2><p>Diseño: ${d.preferencias.diseno} | ATS: ${d.preferencias.compatibleATS}</p>`;
+    html += `</body></html>`;
+    
+    const win = window.open('', '_blank', 'width=800,height=600');
+    win.document.write(html);
+    win.document.close();
+    setTimeout(() => win.print(), 500);
+}
+
+// ========== MODAL DE CALIFICACIÓN (versión mejorada) ==========
+function abrirModalCalificacion() {
+    const modal = document.getElementById('modalCalificacion');
+    if (!modal) {
+        console.error('Modal no encontrado en el HTML');
+        return;
+    }
+    modal.classList.add('active');
+}
+
+function cerrarModal() {
+    document.getElementById('modalCalificacion').classList.remove('active');
+}
+
+// ========== GUARDAR TESTIMONIO Y GENERAR PDF ==========
+function guardarTestimonioYGenerarPDF() {
+    const nombre = document.getElementById('clienteNombre').value.trim();
+    const opinion = document.getElementById('clienteOpinion').value.trim();
+    
+    // Validar
+    if (!nombre) {
+        alert('Por favor ingresa tu nombre');
+        return;
+    }
+    if (calificacionActual === 0) {
+        alert('Por favor selecciona una calificación');
+        return;
+    }
+    if (!opinion) {
+        alert('Por favor escribe tu opinión');
+        return;
+    }
+    
+    // Crear testimonio
+    const nuevoTestimonio = {
+        nombre: nombre,
+        estrellas: parseInt(calificacionActual),
+        opinion: opinion,
+        fecha: new Date().toISOString()
+    };
+    
+    // Guardar en localStorage
+    let testimonios = JSON.parse(localStorage.getItem('testimonios')) || [];
+    testimonios.push(nuevoTestimonio);
+    localStorage.setItem('testimonios', JSON.stringify(testimonios));
+    
+    // Limpiar formulario
+    document.getElementById('clienteNombre').value = '';
+    document.getElementById('clienteOpinion').value = '';
+    calificacionActual = 0;
+    document.querySelectorAll('.stars-input .star').forEach(s => s.classList.remove('active'));
+    document.getElementById('starsDisplay').textContent = '0 estrellas';
+    
+    // Cerrar modal
+    cerrarModal();
+    
+    // Cargar testimonios actualizados
+    cargarTestimonios();
+    
+    // ========== AQUÍ GENERAR EL PDF ==========
+    const datos = window.datosParaPDF;
+    generarPDFDespuesDeCalificar(datos.code, datos.submission, datos.d);
+    
+    // Mostrar mensaje
+    showToast('¡Gracias por tu calificación! Tu CV se descargará en un momento. ⭐');
+}
+
+// ========== BOTÓN OMITIR (opcional) ==========
+function omitirCalificacion() {
+    const datos = window.datosParaPDF;
+    cerrarModal();
+    generarPDFDespuesDeCalificar(datos.code, datos.submission, datos.d);
+    showToast('PDF generado. ¡Gracias por usar nuestro servicio!');
+}
 
         // ============ TOAST ============
         function showToast(msg) {
@@ -2255,6 +2518,123 @@
         init();
         console.log('🚀 JA - Soluciones que te movilizan | Solicitud de Currículum Profesional lista.');
         console.log('💡 Panel administrativo: Agrega #admin al final de la URL. Contraseña: admin123');
+
+        let calificacionActual = 0;
+
+// Cargar testimonios al iniciar
+document.addEventListener('DOMContentLoaded', () => {
+    cargarTestimonios();
+    setupStarsInput();
+});
+
+// ========== ESTRELLAS INTERACTIVAS ==========
+function setupStarsInput() {
+    const stars = document.querySelectorAll('.stars-input .star');
+    
+    stars.forEach(star => {
+        star.addEventListener('click', () => {
+            calificacionActual = star.dataset.value;
+            
+            // Resaltar estrellas
+            stars.forEach(s => s.classList.remove('active'));
+            for (let i = 0; i < calificacionActual; i++) {
+                stars[i].classList.add('active');
+            }
+            
+            // Mostrar número
+            document.getElementById('starsDisplay').textContent = 
+                `${calificacionActual} ${calificacionActual === '1' ? 'estrella' : 'estrellas'}`;
+        });
+    });
+}
+
+// ========== GUARDAR TESTIMONIO ==========
+function guardarTestimonio() {
+    const nombre = document.getElementById('clienteNombre').value.trim();
+    const opinion = document.getElementById('clienteOpinion').value.trim();
+    
+    // Validar
+    if (!nombre) {
+        alert('Por favor ingresa tu nombre');
+        return;
+    }
+    if (calificacionActual === 0) {
+        alert('Por favor selecciona una calificación');
+        return;
+    }
+    if (!opinion) {
+        alert('Por favor escribe tu opinión');
+        return;
+    }
+    
+    // Crear testimonio
+    const nuevoTestimonio = {
+        nombre: nombre,
+        estrellas: parseInt(calificacionActual),
+        opinion: opinion,
+        fecha: new Date().toISOString()
+    };
+    
+    // Guardar en localStorage (o enviar a servidor)
+    let testimonios = JSON.parse(localStorage.getItem('testimonios')) || [];
+    testimonios.push(nuevoTestimonio);
+    localStorage.setItem('testimonios', JSON.stringify(testimonios));
+    
+    // Limpiar formulario
+    document.getElementById('clienteNombre').value = '';
+    document.getElementById('clienteOpinion').value = '';
+    calificacionActual = 0;
+    document.querySelectorAll('.stars-input .star').forEach(s => s.classList.remove('active'));
+    document.getElementById('starsDisplay').textContent = '0 estrellas';
+    
+    // Cerrar modal y recargar testimonios
+    cerrarModal();
+    cargarTestimonios();
+    
+    alert('¡Gracias por tu calificación! ⭐');
+}
+
+// ========== CARGAR TESTIMONIOS DINÁMICOS ==========
+function cargarTestimonios() {
+    const testimonios = JSON.parse(localStorage.getItem('testimonios')) || [];
+    const container = document.getElementById('testimonios-container');
+    
+    // Si no hay testimonios, mostrar mensaje
+    if (testimonios.length === 0) {
+        container.innerHTML = `
+            <div class="card" style="grid-column: 1/-1; text-align: center;">
+                <p style="color: var(--text-secondary);">Sin testimonios aún. ¡Sé el primero en calificar!</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Renderizar testimonios
+    container.innerHTML = testimonios.map(test => `
+        <div class="card">
+            <div class="stars">${'⭐'.repeat(test.estrellas)}</div>
+            <p class="testimonio-opinion">"${test.opinion}"</p>
+            <div class="testimonio-nombre">${test.nombre}</div>
+        </div>
+    `).join('');
+}
+
+// ========== CONTROLAR MODAL ==========
+function abrirModal() {
+    document.getElementById('modalCalificacion').classList.add('active');
+}
+
+function cerrarModal() {
+    document.getElementById('modalCalificacion').classList.remove('active');
+}
+
+// Cerrar modal al hacer click afuera
+window.addEventListener('click', (e) => {
+    const modal = document.getElementById('modalCalificacion');
+    if (e.target === modal) {
+        cerrarModal();
+    }
+});
     </script>
 </body>
 </html>
