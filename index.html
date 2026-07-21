@@ -441,108 +441,54 @@
         }
 
         /* Owner card */
-        .owner-section {
-    padding: 20px;
-    background: #1a2332; /* Color oscuro como en tu imagen */
+   .owner-section {
+    padding: 20px 0;
+    background: transparent; /* Sin fondo */
 }
 
 .owner-card {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 15px; /* Espacio entre foto y nombre */
-    max-width: 300px; /* Ancho máximo */
+    gap: 10px;
+    background: transparent; /* Sin fondo blanco */
+    border: none; /* Sin borde */
+    padding: 0;
+    box-shadow: none; /* Sin sombra */
 }
 
-.owner-photo {
-    width: 100px;
-    height: 100px;
+.owner-photo-placeholder {
+    width: 140px;
+    height: 140px;
     border-radius: 50%;
-    border: 3px solid #1e90ff;
+    border: 3px solid #1e90ff; /* Solo el anillo azul */
     overflow: hidden;
     flex-shrink: 0;
+    background: transparent;
 }
 
-.owner-photo img {
+.owner-photo-placeholder img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 50%;
 }
 
-.owner-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.owner-info h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #000;
+    margin: 10px 0 0 0;
+    text-align: center;
 }
 
-.owner-name {
-    margin: 0;
-    font-size: 18px;
-    font-weight: bold;
-    color: #ffffff;
-    padding: 0;
+.owner-info .owner-role {
+    color: #1e90ff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: center;
+    margin: 5px 0 0 0;
 }
-        .owner-card {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            flex-wrap: wrap;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-xl);
-            padding: 2rem;
-            box-shadow: var(--shadow-md);
-            transition: all var(--transition);
-        }
-        .owner-card:hover {
-            box-shadow: var(--shadow-lg);
-        }
-        .owner-photo-placeholder {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            background: var(--primary-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3.5rem;
-            flex-shrink: 0;
-            border: 3px solid var(--primary);
-            color: var(--primary);
-            overflow: hidden;
-        }
-        .owner-photo-placeholder img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-        .owner-info h3 {
-            font-weight: 700;
-            font-size: 1.4rem;
-            color: var(--text);
-        }
-        .owner-info .owner-role {
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 0.95rem;
-            margin-bottom: 0.5rem;
-        }
-        .owner-info ul {
-            list-style: none;
-            padding: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 0.8rem;
-        }
-        .owner-info ul li {
-            background: var(--primary-light);
-            color: var(--primary);
-            padding: 0.3rem 0.8rem;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
 
         /* FAQ */
         .faq-item {
