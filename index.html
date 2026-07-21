@@ -1826,99 +1826,156 @@
             updateProgress();
         }
 
-        function getStepHTML(step) {
-            const steps = {
-                1: `
-                    <h4 style="margin-bottom:1rem;">📋 Paso 1: Información Personal</h4>
-                    <div class="form-group"><label>Nombre completo *</label><input type="text" id="f_nombre" value="${escHtml(formData.nombre)}" placeholder="Ej: Juan Pérez"></div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Fecha de nacimiento <span class="optional">(opcional)</span></label><input type="date" id="f_fechaNacimiento" value="${formData.fechaNacimiento}"></div>
-                        <div class="form-group"><label>Sexo <span class="optional">(opcional)</span></label><select id="f_sexo"><option value="">Prefiero no decir</option><option value="masculino" ${formData.sexo==='masculino'?'selected':''}>Masculino</option><option value="femenino" ${formData.sexo==='femenino'?'selected':''}>Femenino</option></select></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Ciudad *</label><input type="text" id="f_ciudad" value="${escHtml(formData.ciudad)}" placeholder="Ej: Santo Domingo"></div>
-                        <div class="form-group"><label>Provincia *</label><input type="text" id="f_provincia" value="${escHtml(formData.provincia)}" placeholder="Ej: Distrito Nacional"></div>
-                    </div>
-                    <div class="form-group"><label>Dirección <span class="optional">(opcional)</span></label><input type="text" id="f_direccion" value="${escHtml(formData.direccion)}" placeholder="Calle, número, sector"></div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Número de teléfono *</label><input type="tel" id="f_telefono" value="${escHtml(formData.telefono)}" placeholder="+1 (829) 000-0000"></div>
-                        <div class="form-group"><label>Correo electrónico *</label><input type="email" id="f_email" value="${escHtml(formData.email)}" placeholder="correo@ejemplo.com"></div>
-                    </div>
-                    <div class="form-group"><label>LinkedIn <span class="optional">(opcional)</span></label><input type="url" id="f_linkedin" value="${escHtml(formData.linkedin)}" placeholder="https://linkedin.com/in/tu-perfil"></div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Portafolio <span class="optional">(opcional)</span></label><input type="url" id="f_portafolio" value="${escHtml(formData.portafolio)}" placeholder="https://tuportafolio.com"></div>
-                        <div class="form-group"><label>Página web <span class="optional">(opcional)</span></label><input type="url" id="f_web" value="${escHtml(formData.web)}" placeholder="https://tusitio.com"></div>
-                    </div>`,
-                2: `
-                    <h4 style="margin-bottom:1rem;">🎯 Paso 2: Puesto Deseado</h4>
-                    <div class="form-group"><label>¿A qué puesto deseas aplicar? *</label><input type="text" id="f_puestoDeseado" value="${escHtml(formData.puestoDeseado)}" placeholder="Ej: Desarrollador Frontend"></div>
-                    <div class="form-group"><label>Empresa <span class="optional">(opcional)</span></label><input type="text" id="f_empresaOpcional" value="${escHtml(formData.empresaOpcional)}" placeholder="Nombre de la empresa"></div>
-                    <div class="form-group"><label>¿Cómo encontraste esa vacante? *</label><input type="text" id="f_comoEncontro" value="${escHtml(formData.comoEncontro)}" placeholder="Ej: LinkedIn, recomendación, portal de empleo..."></div>`,
-                3: `
-                    <h4 style="margin-bottom:1rem;">💡 Paso 3: Perfil Profesional</h4>
-                    <div class="form-group"><label>Háblanos un poco sobre ti *</label><textarea id="f_perfilProfesional" placeholder="Describe quién eres, qué te caracteriza y qué puedes aportar a una empresa.">${escHtml(formData.perfilProfesional)}</textarea></div>`,
-                4: `
-                    <h4 style="margin-bottom:1rem;">💼 Paso 4: Experiencia Laboral</h4>
-                    <div id="experienciasContainer">${renderExperiencias()}</div>
-                    <button class="btn-add" onclick="addExperiencia()">+ Agregar otra experiencia</button>`,
-                5: `
-                    <h4 style="margin-bottom:1rem;">🎓 Paso 5: Educación</h4>
-                    <div id="educacionContainer">${renderEducacion()}</div>
-                    <button class="btn-add" onclick="addEducacion()">+ Agregar otro estudio</button>`,
-                6: `
-                    <h4 style="margin-bottom:1rem;">📚 Paso 6: Cursos</h4>
-                    <div id="cursosContainer">${renderCursos()}</div>
-                    <button class="btn-add" onclick="addCurso()">+ Agregar otro curso</button>`,
-                7: `
-                    <h4 style="margin-bottom:1rem;">🛠 Paso 7: Habilidades</h4>
-                    <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.8rem;">Selecciona las que te describen:</p>
-                    <div class="checkbox-group" id="habilidadesCheckboxes">${renderHabilidadesCheckboxes()}</div>
-                    <div class="form-group" style="margin-top:1rem;"><label>Habilidades personalizadas</label><input type="text" id="f_habilidadesCustom" value="${escHtml(formData.habilidadesCustom)}" placeholder="Separa con comas (ej: Liderazgo, Scrum, Ventas)"></div>`,
-                8: `
-                    <h4 style="margin-bottom:1rem;">🌍 Paso 8: Idiomas</h4>
-                    <div id="idiomasContainer">${renderIdiomas()}</div>
-                    <button class="btn-add" onclick="addIdioma()">+ Agregar otro idioma</button>`,
-                9: `
-                    <h4 style="margin-bottom:1rem;">📜 Paso 9: Certificaciones</h4>
-                    <div id="certificacionesContainer">${renderCertificaciones()}</div>
-                    <button class="btn-add" onclick="addCertificacion()">+ Agregar otra certificación</button>`,
-                10: `
-                    <h4 style="margin-bottom:1rem;">👥 Paso 10: Referencias</h4>
-                    <div class="form-group"><label>¿Deseas incluir referencias?</label><select id="f_incluirReferencias"><option value="no" ${formData.incluirReferencias==='no'?'selected':''}>No</option><option value="si" ${formData.incluirReferencias==='si'?'selected':''}>Sí</option></select></div>
-                    <div id="referenciasContainer" style="display:${formData.incluirReferencias==='si'?'block':'none'};">${renderReferencias()}<button class="btn-add" onclick="addReferencia()">+ Agregar otra referencia</button></div>`,
-                11: `
-                    <h4 style="margin-bottom:1rem;">📸 Paso 11: Fotografía</h4>
-                    <div class="form-group"><label>¿Deseas agregar una fotografía? <span class="optional">(opcional)</span></label><input type="file" id="f_fotografia" accept="image/*" onchange="handleFotoUpload(event)"></div>
-                    <div id="fotoPreview" style="margin-top:0.5rem;">${formData.fotografiaDataUrl ? `<img src="${formData.fotografiaDataUrl}" style="max-width:150px;border-radius:8px;border:2px solid var(--border);">` : '<p style="color:var(--text-light);font-size:0.85rem;">No se ha cargado fotografía.</p>'}</div>`,
-                12: `
-                    <h4 style="margin-bottom:1rem;">🎨 Paso 12: Preferencias del Currículum</h4>
-                    <div class="form-row">
-                        <div class="form-group"><label>Tipo de diseño</label><select id="f_pref_diseno"><option value="minimalista" ${formData.preferencias.diseno==='minimalista'?'selected':''}>Minimalista</option><option value="corporativo" ${formData.preferencias.diseno==='corporativo'?'selected':''}>Corporativo</option><option value="moderno" ${formData.preferencias.diseno==='moderno'?'selected':''}>Moderno</option><option value="creativo" ${formData.preferencias.diseno==='creativo'?'selected':''}>Creativo</option></select></div>
-                        <div class="form-group"><label>Color favorito</label><input type="color" id="f_pref_color" value="${formData.preferencias.color}" style="height:42px;padding:4px;cursor:pointer;"></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Tamaño de letra</label><select id="f_pref_tamanoLetra"><option value="pequeno" ${formData.preferencias.tamanoLetra==='pequeno'?'selected':''}>Pequeño</option><option value="normal" ${formData.preferencias.tamanoLetra==='normal'?'selected':''}>Normal</option><option value="grande" ${formData.preferencias.tamanoLetra==='grande'?'selected':''}>Grande</option></select></div>
-                        <div class="form-group"><label>Fotografía en CV</label><select id="f_pref_conFotografia"><option value="con-fotografia" ${formData.preferencias.conFotografia==='con-fotografia'?'selected':''}>Con fotografía</option><option value="sin-fotografia" ${formData.preferencias.conFotografia==='sin-fotografia'?'selected':''}>Sin fotografía</option></select></div>
-                    </div>
-                    <div class="form-group"><label>Compatible con ATS</label><select id="f_pref_compatibleATS"><option value="si" ${formData.preferencias.compatibleATS==='si'?'selected':''}>Sí</option><option value="no" ${formData.preferencias.compatibleATS==='no'?'selected':''}>No</option></select></div>`,
-                13: `
-                    <h4 style="margin-bottom:1rem;">💬 Paso 13: Información Adicional</h4>
-                    <div class="form-group"><label>¿Hay algo importante que debamos destacar?</label><textarea id="f_infoAdicional" placeholder="Cuéntanos cualquier detalle relevante...">${escHtml(formData.infoAdicional)}</textarea></div>`,
-                14: `
-                    <h4 style="margin-bottom:1rem;">📎 Paso 14: Archivos</h4>
-                    <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.8rem;">Sube tu currículum anterior, certificados, diplomas o portafolio.</p>
-                    <div class="form-group"><input type="file" id="f_archivos" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"></div>
-                    <div id="archivosList" style="font-size:0.85rem;color:var(--text-secondary);">${formData.archivos.length > 0 ? formData.archivos.map(a => '📎 ' + a.name).join('<br>') : 'No se han cargado archivos.'}</div>`,
-                15: `
-                    <h4 style="margin-bottom:1rem;">✅ Paso 15: Confirmación</h4>
-                    <p style="color:var(--text-secondary);margin-bottom:1rem;">Revisa el resumen de tu información antes de enviar:</p>
-                    <div id="summaryContainer">${generateSummary()}</div>
-                    <div style="text-align:center;margin-top:1.5rem;">
-                        <button class="btn-submit-form" onclick="submitForm()">📨 Enviar Solicitud</button>
-                    </div>`
-            };
-            return steps[step] || '';
-        }
+       function getStepHTML(step) {
+    const steps = {
+        1: `
+            <h4 style="margin-bottom:1rem;">📋 Paso 1: Información Personal</h4>
+            <div class="form-group"><label>Nombre completo *</label><input type="text" id="f_nombre" value="${escHtml(formData.nombre)}" placeholder="Ej: Juan Pérez"></div>
+            <div class="form-row">
+                <div class="form-group"><label>Fecha de nacimiento <span class="optional">(opcional)</span></label><input type="date" id="f_fechaNacimiento" value="${formData.fechaNacimiento}"></div>
+                <div class="form-group"><label>Sexo <span class="optional">(opcional)</span></label><select id="f_sexo"><option value="">Prefiero no decir</option><option value="masculino" ${formData.sexo==='masculino'?'selected':''}>Masculino</option><option value="femenino" ${formData.sexo==='femenino'?'selected':''}>Femenino</option></select></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Ciudad *</label><input type="text" id="f_ciudad" value="${escHtml(formData.ciudad)}" placeholder="Ej: Santo Domingo"></div>
+                <div class="form-group"><label>Provincia *</label><input type="text" id="f_provincia" value="${escHtml(formData.provincia)}" placeholder="Ej: Distrito Nacional"></div>
+            </div>
+            <div class="form-group"><label>Dirección <span class="optional">(opcional)</span></label><input type="text" id="f_direccion" value="${escHtml(formData.direccion)}" placeholder="Calle, número, sector"></div>
+            <div class="form-row">
+                <div class="form-group"><label>Número de teléfono *</label><input type="tel" id="f_telefono" value="${escHtml(formData.telefono)}" placeholder="+1 (829) 000-0000"></div>
+                <div class="form-group"><label>Correo electrónico *</label><input type="email" id="f_email" value="${escHtml(formData.email)}" placeholder="correo@ejemplo.com"></div>
+            </div>
+            <div class="form-group"><label>LinkedIn <span class="optional">(opcional)</span></label><input type="url" id="f_linkedin" value="${escHtml(formData.linkedin)}" placeholder="https://linkedin.com/in/tu-perfil"></div>
+            <div class="form-row">
+                <div class="form-group"><label>Portafolio <span class="optional">(opcional)</span></label><input type="url" id="f_portafolio" value="${escHtml(formData.portafolio)}" placeholder="https://tuportafolio.com"></div>
+                <div class="form-group"><label>Página web <span class="optional">(opcional)</span></label><input type="url" id="f_web" value="${escHtml(formData.web)}" placeholder="https://tusitio.com"></div>
+            </div>
+            <div class="form-nav-buttons">
+                <div></div>
+                <button class="btn-nav btn-next" onclick="navigateForm('next')">Siguiente →</button>
+            </div>`,
+        2: `
+            <h4 style="margin-bottom:1rem;">🎯 Paso 2: Puesto Deseado</h4>
+            <div class="form-group"><label>¿A qué puesto deseas aplicar? *</label><input type="text" id="f_puestoDeseado" value="${escHtml(formData.puestoDeseado)}" placeholder="Ej: Desarrollador Frontend"></div>
+            <div class="form-group"><label>Empresa <span class="optional">(opcional)</span></label><input type="text" id="f_empresaOpcional" value="${escHtml(formData.empresaOpcional)}" placeholder="Nombre de la empresa"></div>
+            <div class="form-group"><label>¿Cómo encontraste esa vacante? *</label><input type="text" id="f_comoEncontro" value="${escHtml(formData.comoEncontro)}" placeholder="Ej: LinkedIn, recomendación, portal de empleo..."></div>
+            <div class="form-nav-buttons">
+                <button class="btn-nav btn-back" onclick="navigateForm('back')">← Atrás</button>
+                <button class="btn-nav btn-next" onclick="navigateForm('next')">Siguiente →</button>
+            </div>`,
+        3: `
+            <h4 style="margin-bottom:1rem;">💡 Paso 3: Perfil Profesional</h4>
+            <div class="form-group"><label>Háblanos un poco sobre ti *</label><textarea id="f_perfilProfesional" placeholder="Describe quién eres, qué te caracteriza y qué puedes aportar a una empresa.">${escHtml(formData.perfilProfesional)}</textarea></div>
+            <div class="form-nav-buttons">
+                <button class="btn-nav btn-back" onclick="navigateForm('back')">← Atrás</button>
+                <button class="btn-nav btn-next" onclick="navigateForm('next')">Siguiente →</button>
+            </div>`,
+        4: `
+            <h4 style="margin-bottom:1rem;">💼 Paso 4: Experiencia Laboral</h4>
+            <div id="experienciasContainer">${renderExperiencias()}</div>
+            <button class="btn-add" onclick="addExperiencia()">+ Agregar otra experiencia</button>
+            <div class="form-nav-buttons" style="margin-top:1.5rem;">
+                <button class="btn-nav btn-back" onclick="navigateForm('back')">← Atrás</button>
+                <button class="btn-nav btn-next" onclick="navigateForm('next')">Siguiente →</button>
+            </div>`,
+        5: `
+            <h4 style="margin-bottom:1rem;">🎓 Paso 5: Educación</h4>
+            <div id="educacionContainer">${renderEducacion()}</div>
+            <button class="btn-add" onclick="addEducacion()">+ Agregar otro estudio</button>
+            <div class="form-nav-buttons" style="margin-top:1.5rem;">
+                <button class="btn-nav btn-back" onclick="navigateForm('back')">← Atrás</button>
+                <button class="btn-nav btn-next" onclick="navigateForm('next')">Siguiente →</button>
+            </div>`,
+        6: `
+            <h4 style="margin-bottom:1rem;">📚 Paso 6: Cursos</h4>
+            <div id="cursosContainer">${renderCursos()}</div>
+            <button class="btn-add" onclick="addCurso()">+ Agregar otro curso</button>
+            <div class="form-nav-buttons" style="margin-top:1.5rem;">
+                <button class="btn-nav btn-back" onclick="navigateForm('back')">← Atrás</button>
+                <button class="btn-nav btn-next" onclick="navigateForm('next')">Siguiente →</button>
+            </div>`,
+        7: `
+            <h4 style="margin-bottom:1rem;">🛠 Paso 7: Habilidades</h4>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.8rem;">Selecciona las que te describen:</p>
+            <div class="checkbox-group" id="habilidadesCheckboxes">${renderHabilidadesCheckboxes()}</div>
+            <div class="form-group" style="margin-top:1rem;"><label>Habilidades personalizadas</label><input type="text" id="f_habilidadesCustom" value="${escHtml(formData.habilidadesCustom)}" placeholder="Separa con comas (ej: Liderazgo, Scrum, Ventas)"></div>
+            <div class="form-nav-buttons" style="margin-top:1.5rem;">
+                <button class="btn-nav btn-back" onclick="navigateForm('back')">← Atrás</button>
+                <button class="btn-nav btn-next" onclick="navigateForm('next')">Siguiente →</button>
+            </div>`,
+        8: `
+            <h4 style="margin-bottom:1rem;">🌍 Paso 8: Idiomas</h4>
+            <div id="idiomasContainer">${renderIdiomas()}</div>
+            <button class="btn-add" onclick="addIdioma()">+ Agregar otro idioma</button>
+            <div class="form-nav-buttons" style="margin-top:1.5rem;">
+                <button class="btn-nav btn-back" onclick="navigateForm('back')">← Atrás</button>
+                <button class="btn-nav btn-next" onclick="navigateForm('next')">Siguiente →</button>
+            </div>`,
+        9: `
+            <h4 style="margin-bottom:1rem;">📜 Paso 9: Certificaciones</h4>
+            <div id="certificacionesContainer">${renderCertificaciones()}</div>
+            <button class="btn-add" onclick="addCertificacion()">+ Agregar otra certificación</button>
+            <div class="form-nav-buttons" style="margin-top:1.5rem;">
+                <button class="btn-nav btn-back" onclick="navigateForm('back')">← Atrás</button>
+                <button class="btn-nav btn-next" onclick="navigateForm('next')">Siguiente →</button>
+            </div>`,
+        10: `
+            <h4 style="margin-bottom:1rem;">👥 Paso 10: Referencias</h4>
+            <div class="form-group"><label>¿Deseas incluir referencias?</label><select id="f_incluirReferencias"><option value="no" ${formData.incluirReferencias==='no'?'selected':''}>No</option><option value="si" ${formData.incluirReferencias==='si'?'selected':''}>Sí</option></select></div>
+            <div id="referenciasContainer" style="display:${formData.incluirReferencias==='si'?'block':'none'};">${renderReferencias()}<button class="btn-add" onclick="addReferencia()">+ Agregar otra referencia</button></div>
+            <div class="form-nav-buttons" style="margin-top:1.5rem;">
+                <button class="btn-nav btn-back" onclick="navigateForm('back')">← Atrás</button>
+                <button class="btn-nav btn-next" onclick="navigateForm('next')">Siguiente →</button>
+            </div>`,
+        11: `
+            <h4 style="margin-bottom:1rem;">📸 Paso 11: Fotografía</h4>
+            <div class="form-group"><label>¿Deseas agregar una fotografía? <span class="optional">(opcional)</span></label><input type="file" id="f_fotografia" accept="image/*" onchange="handleFotoUpload(event)"></div>
+            <div id="fotoPreview" style="margin-top:0.5rem;">${formData.fotografiaDataUrl ? `<img src="${formData.fotografiaDataUrl}" style="max-width:150px;border-radius:8px;border:2px solid var(--border);">` : '<p style="color:var(--text-light);font-size:0.85rem;">No se ha cargado fotografía.</p>'}</div>
+            <div class="form-nav-buttons" style="margin-top:1.5rem;">
+                <button class="btn-nav btn-back" onclick="navigateForm('back')">← Atrás</button>
+                <button class="btn-nav btn-next" onclick="navigateForm('next')">Siguiente →</button>
+            </div>`,
+        12: `
+            <h4 style="margin-bottom:1rem;">🎨 Paso 12: Preferencias del Currículum</h4>
+            <div class="form-row">
+                <div class="form-group"><label>Tipo de diseño</label><select id="f_pref_diseno"><option value="minimalista" ${formData.preferencias.diseno==='minimalista'?'selected':''}>Minimalista</option><option value="corporativo" ${formData.preferencias.diseno==='corporativo'?'selected':''}>Corporativo</option><option value="moderno" ${formData.preferencias.diseno==='moderno'?'selected':''}>Moderno</option><option value="creativo" ${formData.preferencias.diseno==='creativo'?'selected':''}>Creativo</option></select></div>
+                <div class="form-group"><label>Color favorito</label><input type="color" id="f_pref_color" value="${formData.preferencias.color}" style="height:42px;padding:4px;cursor:pointer;"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Tamaño de letra</label><select id="f_pref_tamanoLetra"><option value="pequeno" ${formData.preferencias.tamanoLetra==='pequeno'?'selected':''}>Pequeño</option><option value="normal" ${formData.preferencias.tamanoLetra==='normal'?'selected':''}>Normal</option><option value="grande" ${formData.preferencias.tamanoLetra==='grande'?'selected':''}>Grande</option></select></div>
+                <div class="form-group"><label>Fotografía en CV</label><select id="f_pref_conFotografia"><option value="con-fotografia" ${formData.preferencias.conFotografia==='con-fotografia'?'selected':''}>Con fotografía</option><option value="sin-fotografia" ${formData.preferencias.conFotografia==='sin-fotografia'?'selected':''}>Sin fotografía</option></select></div>
+            </div>
+            <div class="form-group"><label>Compatible con ATS</label><select id="f_pref_compatibleATS"><option value="si" ${formData.preferencias.compatibleATS==='si'?'selected':''}>Sí</option><option value="no" ${formData.preferencias.compatibleATS==='no'?'selected':''}>No</option></select></div>
+            <div class="form-nav-buttons" style="margin-top:1.5rem;">
+                <button class="btn-nav btn-back" onclick="navigateForm('back')">← Atrás</button>
+                <button class="btn-nav btn-next" onclick="navigateForm('next')">Siguiente →</button>
+            </div>`,
+        13: `
+            <h4 style="margin-bottom:1rem;">💬 Paso 13: Información Adicional</h4>
+            <div class="form-group"><label>¿Hay algo importante que debamos destacar?</label><textarea id="f_infoAdicional" placeholder="Cuéntanos cualquier detalle relevante...">${escHtml(formData.infoAdicional)}</textarea></div>
+            <div class="form-nav-buttons" style="margin-top:1.5rem;">
+                <button class="btn-nav btn-back" onclick="navigateForm('back')">← Atrás</button>
+                <button class="btn-nav btn-next" onclick="navigateForm('next')">Siguiente →</button>
+            </div>`,
+        14: `
+            <h4 style="margin-bottom:1rem;">📎 Paso 14: Archivos</h4>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.8rem;">Sube tu currículum anterior, certificados, diplomas o portafolio.</p>
+            <div class="form-group"><input type="file" id="f_archivos" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"></div>
+            <div id="archivosList" style="font-size:0.85rem;color:var(--text-secondary);">${formData.archivos.length > 0 ? formData.archivos.map(a => '📎 ' + a.name).join('<br>') : 'No se han cargado archivos.'}</div>
+            <div class="form-nav-buttons" style="margin-top:1.5rem;">
+                <button class="btn-nav btn-back" onclick="navigateForm('back')">← Atrás</button>
+                <button class="btn-nav btn-next" onclick="navigateForm('next')">Siguiente →</button>
+            </div>`,
+        15: `
+            <h4 style="margin-bottom:1rem;">✅ Paso 15: Confirmación</h4>
+            <p style="color:var(--text-secondary);margin-bottom:1rem;">Revisa el resumen de tu información antes de enviar:</p>
+            <div id="summaryContainer">${generateSummary()}</div>
+            <div class="form-nav-buttons" style="margin-top:1.5rem;">
+                <button class="btn-nav btn-back" onclick="navigateForm('back')">← Atrás</button>
+                <button class="btn-submit-form" onclick="submitForm()">📨 Enviar Solicitud</button>
+            </div>`
+    };
+    return steps[step] || '';
+}
 
         function escHtml(str) {
             if (!str) return '';
