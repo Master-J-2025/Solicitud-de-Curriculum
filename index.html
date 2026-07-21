@@ -1418,6 +1418,142 @@
     .skill-icon {
         font-size: 2rem;
     }
+    /* ========== MODAL ========== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 90%;
+    animation: slideUp 0.3s ease;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    color: #1a2332;
+    margin-bottom: 0.5rem;
+}
+
+.modal-content > p {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+/* Formulario */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #1a2332;
+    font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #1e90ff;
+    box-shadow: 0 0 0 3px rgba(30, 144, 255, 0.1);
+}
+
+/* Estrellas interactivas */
+.stars-input {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.stars-input .star {
+    font-size: 2rem;
+    cursor: pointer;
+    opacity: 0.4;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.stars-input .star:hover {
+    opacity: 0.8;
+    transform: scale(1.1);
+}
+
+.stars-input .star.active {
+    opacity: 1;
+}
+
+#starsDisplay {
+    font-size: 0.9rem;
+    color: #f59e0b;
+    font-weight: 600;
+}
+
+/* Botones Modal */
+.modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.btn-secondary {
+    background: #f0f0f0;
+    color: #1a2332;
+    border: 1px solid #e0e0e0;
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+    background: #e0e0e0;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
 }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -1701,8 +1837,112 @@
 
     <!-- WhatsApp Float -->
     <a href="https://wa.me/18292612750" target="_blank" rel="noopener" class="whatsapp-float" title="Hablar por WhatsApp">💬</a>
+    <!-- ========== MODAL DE CALIFICACIÓN ========== -->
+<div id="modalCalificacion" class="modal">
+    <div class="modal-content">
+        <h3>¿Cómo fue tu experiencia?</h3>
+        <p>Tu opinión nos ayuda a mejorar y aparecerá en nuestro sitio.</p>
+        
+        <!-- Nombre -->
+        <div class="form-group">
+            <label>Tu nombre:</label>
+            <input type="text" id="clienteNombre" placeholder="Ej: María G." required>
+        </div>
+        
+        <!-- Estrellas -->
+        <div class="form-group">
+            <label>Calificación:</label>
+            <div class="stars-input" id="starsInput">
+                <span class="star" data-value="1">⭐</span>
+                <span class="star" data-value="2">⭐</span>
+                <span class="star" data-value="3">⭐</span>
+                <span class="star" data-value="4">⭐</span>
+                <span class="star" data-value="5">⭐</span>
+            </div>
+            <div id="starsDisplay">0 estrellas</div>
+        </div>
+        
+        <!-- Opinión -->
+        <div class="form-group">
+            <label>Tu opinión:</label>
+            <textarea id="clienteOpinion" placeholder="Cuéntanos tu experiencia..." rows="4" required></textarea>
+        </div>
+        
+        <!-- Botones -->
+        <div class="modal-buttons">
+            <button class="btn btn-primary" onclick="guardarTestimonioYGenerarPDF()">
+                Enviar Calificación y Descargar CV
+            </button>
+            <button class="btn btn-secondary" onclick="omitirCalificacion()">
+                Descargar sin Calificar
+            </button>
+        </div>
+    </div>
+</div>
 
     <script>
+        // ========== VARIABLE GLOBAL ==========
+let calificacionActual = 0;
+
+// Ejecutar cuando se carga la página
+document.addEventListener('DOMContentLoaded', () => {
+    setupStarsInput();
+    cargarTestimonios();
+    
+    // Cerrar modal al hacer click afuera
+    window.addEventListener('click', (e) => {
+        const modal = document.getElementById('modalCalificacion');
+        if (e.target === modal) {
+            cerrarModal();
+        }
+    });
+});
+
+// ========== SETUP ESTRELLAS ==========
+function setupStarsInput() {
+    const stars = document.querySelectorAll('.stars-input .star');
+    
+    stars.forEach(star => {
+        star.addEventListener('click', () => {
+            calificacionActual = star.dataset.value;
+            
+            // Resaltar estrellas
+            stars.forEach(s => s.classList.remove('active'));
+            for (let i = 0; i < calificacionActual; i++) {
+                stars[i].classList.add('active');
+            }
+            
+            // Mostrar número
+            document.getElementById('starsDisplay').textContent = 
+                `${calificacionActual} ${calificacionActual === '1' ? 'estrella' : 'estrellas'}`;
+        });
+    });
+}
+
+// ========== CARGAR TESTIMONIOS ==========
+function cargarTestimonios() {
+    const testimonios = JSON.parse(localStorage.getItem('testimonios')) || [];
+    const container = document.getElementById('testimonios-container');
+    
+    if (!container) return; // Si no existe el contenedor, no hacer nada
+    
+    if (testimonios.length === 0) {
+        container.innerHTML = `
+            <div class="card" style="grid-column: 1/-1; text-align: center;">
+                <p style="color: var(--text-secondary);">Sin testimonios aún. ¡Sé el primero en calificar!</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = testimonios.map(test => `
+        <div class="card">
+            <div style="font-size:1.2rem;color:#f59e0b;">${'⭐'.repeat(test.estrellas)}</div>
+            <p style="font-style:italic;margin:0.8rem 0;">"${test.opinion}"</p>
+            <strong style="color:var(--text);">${test.nombre}</strong>
+        </div>
+    `).join('');
+}
         // ============ GLOBAL STATE ============
         const TOTAL_STEPS = 15;
         let currentStep = 1;
@@ -2495,75 +2735,55 @@
 
 function generatePDF(code) {
     const submission = JSON.parse(localStorage.getItem('ja-submissions') || '[]').find(s => s.code === code);
-    if (!submission) { showToast('No se encontró la solicitud.'); return; }
+    if (!submission) { 
+        showToast('No se encontró la solicitud.'); 
+        return; 
+    }
     
     const d = submission.data;
     
-    // ========== MOSTRAR MODAL DE CALIFICACIÓN ==========
-    // Guardar la data para usarla después
+    // Guardar datos
     window.datosParaPDF = { code, submission, d };
     
     // Abrir modal
     abrirModalCalificacion();
-    
-    // El PDF se genera después de que el usuario califica
 }
 
-// ========== NUEVA FUNCIÓN: Generar PDF después de calificar ==========
-function generarPDFDespuesDeCalificar(code, submission, d) {
-    let html =
-        `<html><head><meta charset="UTF-8"><title>Resumen CV - ${code}</title><style>body{font-family:sans-serif;padding:2rem;max-width:800px;margin:auto;}h1{color:#2563EB;}h2{border-bottom:2px solid #2563EB;padding-bottom:4px;}p{margin:4px 0;}</style></head><body>`;
-    html += `<h1>Resumen de Solicitud - ${code}</h1>`;
-    html += `<p><strong>Fecha:</strong> ${new Date(submission.fecha).toLocaleString()}</p>`;
-    html += `<h2>Información Personal</h2><p>Nombre: ${d.nombre}</p><p>Teléfono: ${d.telefono}</p><p>Email: ${d.email}</p><p>Ciudad: ${d.ciudad}, ${d.provincia}</p>`;
-    html += `<h2>Puesto Deseado</h2><p>${d.puestoDeseado} ${d.empresaOpcional?'en '+d.empresaOpcional:''}</p>`;
-    html += `<h2>Perfil Profesional</h2><p>${d.perfilProfesional}</p>`;
-    html += `<h2>Experiencia Laboral</h2>${d.experiencias.map(e=>'<p><strong>'+e.cargo+'</strong> en '+e.empresa+' ('+e.fechaInicio+' - '+(e.actualmente?'Actualidad':e.fechaFin)+')</p>').join('')}`;
-    html += `<h2>Educación</h2>${d.educacion.map(e=>'<p>'+e.carrera+' - '+e.centro+' ('+e.nivel+', '+e.estado+')</p>').join('')}`;
-    html += `<h2>Habilidades</h2><p>${d.habilidades.join(', ')} ${d.habilidadesCustom}</p>`;
-    html += `<h2>Preferencias</h2><p>Diseño: ${d.preferencias.diseno} | ATS: ${d.preferencias.compatibleATS}</p>`;
-    html += `</body></html>`;
-    
-    const win = window.open('', '_blank', 'width=800,height=600');
-    win.document.write(html);
-    win.document.close();
-    setTimeout(() => win.print(), 500);
-}
-
-// ========== MODAL DE CALIFICACIÓN (versión mejorada) ==========
 function abrirModalCalificacion() {
     const modal = document.getElementById('modalCalificacion');
     if (!modal) {
-        console.error('Modal no encontrado en el HTML');
+        console.error('❌ Modal no encontrado. Verifica que exista en el HTML.');
+        showToast('Error: El modal no fue encontrado.');
         return;
     }
     modal.classList.add('active');
 }
 
 function cerrarModal() {
-    document.getElementById('modalCalificacion').classList.remove('active');
+    const modal = document.getElementById('modalCalificacion');
+    if (modal) {
+        modal.classList.remove('active');
+    }
 }
 
-// ========== GUARDAR TESTIMONIO Y GENERAR PDF ==========
 function guardarTestimonioYGenerarPDF() {
     const nombre = document.getElementById('clienteNombre').value.trim();
     const opinion = document.getElementById('clienteOpinion').value.trim();
     
-    // Validar
     if (!nombre) {
-        alert('Por favor ingresa tu nombre');
+        showToast('⚠️ Por favor ingresa tu nombre');
         return;
     }
     if (calificacionActual === 0) {
-        alert('Por favor selecciona una calificación');
+        showToast('⚠️ Por favor selecciona una calificación');
         return;
     }
     if (!opinion) {
-        alert('Por favor escribe tu opinión');
+        showToast('⚠️ Por favor escribe tu opinión');
         return;
     }
     
-    // Crear testimonio
+    // Crear y guardar testimonio
     const nuevoTestimonio = {
         nombre: nombre,
         estrellas: parseInt(calificacionActual),
@@ -2571,38 +2791,72 @@ function guardarTestimonioYGenerarPDF() {
         fecha: new Date().toISOString()
     };
     
-    // Guardar en localStorage
     let testimonios = JSON.parse(localStorage.getItem('testimonios')) || [];
     testimonios.push(nuevoTestimonio);
     localStorage.setItem('testimonios', JSON.stringify(testimonios));
     
-    // Limpiar formulario
+    // Limpiar
     document.getElementById('clienteNombre').value = '';
     document.getElementById('clienteOpinion').value = '';
     calificacionActual = 0;
     document.querySelectorAll('.stars-input .star').forEach(s => s.classList.remove('active'));
     document.getElementById('starsDisplay').textContent = '0 estrellas';
     
-    // Cerrar modal
     cerrarModal();
-    
-    // Cargar testimonios actualizados
     cargarTestimonios();
     
-    // ========== AQUÍ GENERAR EL PDF ==========
+    // Generar PDF
     const datos = window.datosParaPDF;
     generarPDFDespuesDeCalificar(datos.code, datos.submission, datos.d);
     
-    // Mostrar mensaje
-    showToast('¡Gracias por tu calificación! Tu CV se descargará en un momento. ⭐');
+    showToast('✅ ¡Gracias por tu calificación! Tu CV se está descargando. ⭐');
 }
 
-// ========== BOTÓN OMITIR (opcional) ==========
 function omitirCalificacion() {
     const datos = window.datosParaPDF;
     cerrarModal();
     generarPDFDespuesDeCalificar(datos.code, datos.submission, datos.d);
-    showToast('PDF generado. ¡Gracias por usar nuestro servicio!');
+    showToast('📄 PDF generado. ¡Gracias por usar nuestro servicio!');
+}
+
+function generarPDFDespuesDeCalificar(code, submission, d) {
+    let html = `<html><head><meta charset="UTF-8"><title>Resumen CV - ${code}</title><style>body{font-family:Arial, sans-serif;padding:2rem;max-width:800px;margin:auto;line-height:1.6;}h1{color:#2563EB;border-bottom:3px solid #2563EB;padding-bottom:10px;}h2{color:#1a2332;margin-top:1.5rem;border-bottom:2px solid #2563EB;padding-bottom:5px;}p{margin:8px 0;color:#333;}.section{margin:1rem 0;}</style></head><body>`;
+    
+    html += `<h1>Resumen de Solicitud - ${code}</h1>`;
+    html += `<p><strong>Fecha:</strong> ${new Date(submission.fecha).toLocaleString()}</p>`;
+    
+    html += `<h2>Información Personal</h2>
+    <p><strong>Nombre:</strong> ${d.nombre}</p>
+    <p><strong>Teléfono:</strong> ${d.telefono}</p>
+    <p><strong>Email:</strong> ${d.email}</p>
+    <p><strong>Ciudad:</strong> ${d.ciudad}, ${d.provincia}</p>`;
+    
+    html += `<h2>Puesto Deseado</h2><p>${d.puestoDeseado} ${d.empresaOpcional ? 'en ' + d.empresaOpcional : ''}</p>`;
+    
+    html += `<h2>Perfil Profesional</h2><p>${d.perfilProfesional}</p>`;
+    
+    if (d.experiencias && d.experiencias.length > 0) {
+        html += `<h2>Experiencia Laboral</h2>`;
+        d.experiencias.forEach(e => {
+            html += `<p><strong>${e.cargo}</strong> en ${e.empresa} (${e.fechaInicio} - ${e.actualmente ? 'Actualidad' : e.fechaFin})</p>`;
+        });
+    }
+    
+    if (d.educacion && d.educacion.length > 0) {
+        html += `<h2>Educación</h2>`;
+        d.educacion.forEach(e => {
+            html += `<p>${e.carrera} - ${e.centro} (${e.nivel}, ${e.estado})</p>`;
+        });
+    }
+    
+    html += `<h2>Habilidades</h2><p>${d.habilidades.join(', ')} ${d.habilidadesCustom || ''}</p>`;
+    html += `<h2>Preferencias</h2><p>Diseño: ${d.preferencias.diseno} | ATS: ${d.preferencias.compatibleATS}</p>`;
+    html += `</body></html>`;
+    
+    const win = window.open('', '_blank', 'width=900,height=700');
+    win.document.write(html);
+    win.document.close();
+    setTimeout(() => win.print(), 500);
 }
 
         // ============ TOAST ============
